@@ -11,6 +11,11 @@ Worker::Worker()
 Worker::~Worker()
 {}
 
+void Worker::setPath(QString fileWay)
+{
+	path = fileWay;
+}
+
 void Worker::getPort(int port)
 {
 	udpSocket->close();
@@ -82,8 +87,11 @@ void Worker::readingData()
 			i++;
 		} while (i < times.size());
 
+		QFile f(path);
+
 		channelInfo.setPortSender(senderPort);
-		channelInfo.setUdpPack(QString::fromStdString(datagram.toStdString()));
+		channelInfo.setUdpPack(datagram);
+		channelInfo.setDownloaded(float(f.size()) / float(1024));
 
 		emit infoSend(channelInfo);
 	}

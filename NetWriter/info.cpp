@@ -4,7 +4,7 @@
 Info::Info()
 {}
 
-Info::Info(QString udpPack, QString ipSender, int portSender, int channel, float speed, float downloaded, bool downloading)
+Info::Info(QByteArray udpPack, QString ipSender, int portSender, int channel, float speed, float downloaded, bool downloading)
 {
 	this->channel = channel;
 	this->downloaded = downloaded;
@@ -48,7 +48,7 @@ void Info::setDownloaded(float downloaded)
 	this->downloaded = downloaded;
 }
 
-void Info::setUdpPack(QString udpPack)
+void Info::setUdpPack(QByteArray udpPack)
 {
 	this->udpPack = udpPack;
 }
@@ -83,12 +83,12 @@ float Info::getDownloaded() const
 	return downloaded;
 }
 
-QString Info::getUdpPack() const
+QByteArray Info::getUdpPack() const
 {
 	return this->udpPack;
 }
 
-void Info::addToUdpPackage(QString addingUdpPack)
+void Info::addToUdpPackage(QByteArray addingUdpPack)
 {
 	this->udpPack.append(addingUdpPack);
 }

@@ -6,7 +6,7 @@ class Info
 {
 public:
 	Info();
-	Info(QString udpPack, QString ipSender, int portSender, int channel, float speed = 0, float downloaded = 0, bool downloading = false);
+	Info(QByteArray udpPack, QString ipSender, int portSender, int channel, float speed = 0, float downloaded = 0, bool downloading = false);
 	~Info();
 
 	void setDownloading(bool downloading);
@@ -15,7 +15,7 @@ public:
 	void setChannel(int channel);
 	void setSpeed(float speed);
 	void setDownloaded(float downloaded);
-	void setUdpPack(QString udpPack);
+	void setUdpPack(QByteArray udpPack);
 
 	bool getDownloading() const;
 	QString getIpSender() const;
@@ -23,9 +23,9 @@ public:
 	int getChannel() const;
 	float getSpeed() const;
 	float getDownloaded() const;
-	QString getUdpPack() const;
+	QByteArray getUdpPack() const;
 
-	void addToUdpPackage(QString addingUdpPack);
+	void addToUdpPackage(QByteArray addingUdpPack);
 
 private:
 	bool downloading;
@@ -34,5 +34,5 @@ private:
 	int channel;
 	float speed;
 	float downloaded;
-	QString udpPack;
+	QByteArray udpPack;
 };

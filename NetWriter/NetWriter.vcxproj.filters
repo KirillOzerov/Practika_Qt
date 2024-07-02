@@ -52,6 +52,9 @@
     <ClCompile Include="worker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="downloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="netreader.h">
@@ -64,6 +67,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="worker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="downloader.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

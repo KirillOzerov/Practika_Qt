@@ -13,9 +13,14 @@ int QTableModel::rowCount(const QModelIndex& parent) const
 	return dataInfo.size();
 }
 
+int QTableModel::rowCount() const
+{
+	return dataInfo.size();
+}
+
 int QTableModel::columnCount(const QModelIndex& parent) const
 {
-	return 6;
+	return 6 + 1;
 }
 
 bool QTableModel::insertRows(const Info& info, const QModelIndex& parent)
@@ -32,6 +37,16 @@ bool QTableModel::removeRows(int position, const QModelIndex& parent)
 	dataInfo.remove(position);
 	endRemoveRows();
 	return true;
+}
+
+Qt::ItemFlags QTableModel::flags(const QModelIndex& index) const
+{
+	if (index.column() == 6)
+	{
+		return QAbstractTableModel::flags(index) | Qt::ItemFlag::ItemIsUserCheckable;
+	}
+
+	return QAbstractTableModel::flags(index);
 }
 
 QVariant QTableModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -55,7 +70,9 @@ QVariant QTableModel::headerData(int section, Qt::Orientation orientation, int r
 		case 4:
 			return QVariant(QString::fromUtf8("Speed(kBit/sec)"));
 		case 5:
-			return QVariant(QString::fromUtf8("Downloaded"));
+			return QVariant(QString::fromUtf8("Downloaded(kBait)"));
+		case 6:
+			return "Check";
 		default:
 			return QVariant();
 		}
@@ -63,13 +80,23 @@ QVariant QTableModel::headerData(int section, Qt::Orientation orientation, int r
 	return QVariant();
 }
 
+bool QTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+	if (index.column() == 6 && role == Qt::CheckStateRole)
+	{
+		dataInfo[index.row()].setDownloading(value == Qt::Checked);
+	}
+
+	return QAbstractTableModel::setData(index, value, role);
+}
+
 QVariant QTableModel::data(const QModelIndex& index, int role) const
 {
 	if (role == Qt::DisplayRole) {
 		switch (index.column())
 		{
-		case 0:
-			return dataInfo[index.row()].getDownloading();
+			/*case 0:
+				return dataInfo[index.row()].getDownloading();*/
 		case 1:
 			return dataInfo[index.row()].getIpSender();
 		case 2:
@@ -82,13 +109,18 @@ QVariant QTableModel::data(const QModelIndex& index, int role) const
 			return dataInfo[index.row()].getDownloaded();
 		}
 	}
+	else if (role == Qt::CheckStateRole)
+	{
+		if (index.column() == 6)
+			return dataInfo[index.row()].getDownloading() ? Qt::Checked : Qt::Unchecked;
+	}
 	return QVariant();
 }
 
 void QTableModel::clearWindow()
 {
-	auto i = index(int(dataInfo.begin()), 4);
-	auto j = index(int(dataInfo.end()), 4);
+	auto i = index(0, 4);
+	auto j = index(dataInfo.size() - 1, 4);
 	dataInfo.clear();
 	emit dataChanged(i, j);
 	emit layoutChanged();
@@ -96,20 +128,27 @@ void QTableModel::clearWindow()
 
 void QTableModel::addInfo(const Info& info)
 {
-	bool flag = true;
-	auto i = index(int(dataInfo.begin()), 4);
-	auto j = index(int(dataInfo.end()), 4);
-	for (QVector<Info>::iterator iter = dataInfo.begin(); iter != dataInfo.end(); iter++)
+	int i;
+	for (i = 0; i < dataInfo.count(); i++)
 	{
-		if ((iter->getChannel() == info.getChannel()) && (iter->getIpSender() == info.getIpSender()) && (iter->getPortSender() == info.getPortSender()))
+		Info& item = dataInfo[i];
+
+		if ((item.getChannel() == info.getChannel()) && (item.getIpSender() == info.getIpSender()) && (item.getPortSender() == info.getPortSender()))
 		{
-			iter->setSpeed(info.getSpeed());
-			flag = false;
+			item.setSpeed(info.getSpeed());
+			item.addToUdpPackage(info.getUdpPack());//добавление данных
+			item.setDownloaded(info.getDownloaded());
+			QModelIndex idx = index(0, 4);
+			QModelIndex idx1 = index(dataInfo.size() - 1, 5);
+
+			emit dataChanged(idx, idx1);
+			break;
 		}
 	}
-	emit dataChanged(i, j);
-	if (flag)
+
+	if (i >= dataInfo.count())
 	{
 		insertRows(info);
+		emit addCheckBoxSignal();
 	}
 }

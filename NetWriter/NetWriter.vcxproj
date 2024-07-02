@@ -107,6 +107,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="downloader.cpp" />
     <ClCompile Include="qtablemodel.cpp" />
     <ClCompile Include="speedtracker.cpp" />
     <ClCompile Include="worker.cpp" />
@@ -121,6 +122,7 @@
     <QtMoc Include="netreader.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="downloader.h" />
     <ClInclude Include="info.h" />
     <QtMoc Include="worker.h" />
     <QtMoc Include="speedtracker.h" />
