@@ -20,7 +20,7 @@ int QTableModel::rowCount() const
 
 int QTableModel::columnCount(const QModelIndex& parent) const
 {
-	return 6 + 1;
+	return 6 /*+ 1*/;
 }
 
 bool QTableModel::insertRows(const Info& info, const QModelIndex& parent)
@@ -60,19 +60,19 @@ QVariant QTableModel::headerData(int section, Qt::Orientation orientation, int r
 		switch (section)
 		{
 		case 0:
-			return QVariant(QString::fromUtf8("Downloading"));
+			return QVariant(QString::fromLocal8Bit("Скачивание"));
 		case 1:
-			return QVariant(QString::fromUtf8("SenderIP"));
+			return QVariant(QString::fromLocal8Bit("IP отправителя"));
 		case 2:
-			return QVariant(QString::fromUtf8("SenderPort"));
+			return QVariant(QString::fromLocal8Bit("Порт отправителя"));
 		case 3:
-			return QVariant(QString::fromUtf8("Channel"));
+			return QVariant(QString::fromLocal8Bit("Канал"));
 		case 4:
-			return QVariant(QString::fromUtf8("Speed(kBit/sec)"));
+			return QVariant(QString::fromLocal8Bit("Скорость(кБит/с)"));
 		case 5:
-			return QVariant(QString::fromUtf8("Downloaded(kBait)"));
-		case 6:
-			return "Check";
+			return QVariant(QString::fromLocal8Bit("Скачано(кБайт)"));
+		//case 6:
+		//	return "Check";
 		default:
 			return QVariant();
 		}
@@ -109,11 +109,11 @@ QVariant QTableModel::data(const QModelIndex& index, int role) const
 			return dataInfo[index.row()].getDownloaded();
 		}
 	}
-	else if (role == Qt::CheckStateRole)
+	/*else if (role == Qt::CheckStateRole)
 	{
 		if (index.column() == 6)
 			return dataInfo[index.row()].getDownloading() ? Qt::Checked : Qt::Unchecked;
-	}
+	}*/
 	return QVariant();
 }
 
